@@ -85,7 +85,7 @@ const DAFTAR_MENU = [
     kategori: "minuman",
     harga: 4000,
     deskripsi: "Es cappucino cincau yang segar",
-    gambar: "images/capcin.png"// <-- Letak path foto produk
+    gambar: "images/Capcin.png"// <-- Letak path foto produk
   }
 ];
 
