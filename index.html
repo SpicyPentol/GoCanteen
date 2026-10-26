@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <!-- Pengaturan viewport agar responsif di HP, Tablet, dan Komputer -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kantin Sekolah - Pesan Makanan, Camilan & Minuman</title>
+
+  <!-- Menghubungkan file CSS terpisah -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       STRUKTUR UTAMA HALAMAN (BERSIH TANPA EMOJI)
+       ========================================================================= -->
+  <div class="container">
+
+    <!-- 1. HEADER -->
+    <header>
+      <div class="header-badge">Kantin Digital</div>
+      <h1>Kantin Sekolah</h1>
+      <p>Pesan makanan, camilan renyah, dan minuman segar dengan mudah dan cepat!</p>
+    </header>
+
+    <!-- 2. DAFTAR MENU -->
+    <!-- Kartu menu beserta slot foto produk di bagian atas dirender oleh script.js -->
+    <!-- Kategori 1: Makanan -->
+    <h2 class="section-title">Makanan Lezat</h2>
+    <div id="grid-makanan" class="menu-grid">
+      <!-- Item menu makanan beserta slot foto produk akan ditampilkan oleh script.js -->
+    </div>
+
+    <!-- Kategori 2: Camilan -->
+    <h2 class="section-title">Camilan Renyah</h2>
+    <div id="grid-camilan" class="menu-grid">
+      <!-- Item menu camilan beserta slot foto produk akan ditampilkan oleh script.js -->
+    </div>
+
+    <!-- Kategori 3: Minuman -->
+    <h2 class="section-title">Minuman Segar</h2>
+    <div id="grid-minuman" class="menu-grid">
+      <!-- Item menu minuman beserta slot foto produk akan ditampilkan oleh script.js -->
+    </div>
+
+    <!-- 3. KERANJANG PESANAN -->
+    <section class="card-section" id="section-keranjang">
+      <div class="card-header">
+        <h2>Keranjang Pesanan</h2>
+        <span id="badge-total-item" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">0 item</span>
+      </div>
+
+      <!-- Wadah daftar item keranjang -->
+      <div id="daftar-keranjang">
+        <!-- Jika kosong, akan menampilkan teks info keranjang kosong -->
+      </div>
+    </section>
+
+    <!-- 4. DETAIL PESANAN -->
+    <section class="card-section" id="section-detail">
+      <div class="card-header">
+        <h2>Detail Pesanan</h2>
+      </div>
+
+      <!-- Pilihan Metode Pembayaran -->
+      <div class="form-group">
+        <label class="form-label">Metode Pembayaran</label>
+        <div class="choice-grid">
+          <div class="choice-card">
+            <input type="radio" id="bayar-qris" name="metode-bayar" value="QRIS" checked>
+            <label for="bayar-qris" class="choice-label">QRIS</label>
+          </div>
+          <div class="choice-card">
+            <input type="radio" id="bayar-cash" name="metode-bayar" value="Cash">
+            <label for="bayar-cash" class="choice-label">Cash (Tunai)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pilihan Metode Pengambilan -->
+      <div class="form-group">
+        <label class="form-label">Metode Pengambilan</label>
+        <div class="choice-grid">
+          <div class="choice-card">
+            <input type="radio" id="ambil-sendiri" name="opsi-ambil" value="Ambil sendiri" checked onchange="handleOpsiAmbilChange()">
+            <label for="ambil-sendiri" class="choice-label">Ambil Sendiri</label>
+          </div>
+          <div class="choice-card">
+            <input type="radio" id="ambil-diantar" name="opsi-ambil" value="Diantar" onchange="handleOpsiAmbilChange()">
+            <label for="ambil-diantar" class="choice-label">Diantar</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catatan untuk Penjual -->
+      <div class="form-group">
+        <label for="catatan-pembeli" class="form-label">
+          Catatan untuk Penjual
+          <small id="label-keterangan-catatan"></small>
+        </label>
+        <textarea 
+          id="catatan-pembeli" 
+          class="textarea-catatan" 
+          placeholder="Opsional"></textarea>
+        <div id="error-catatan" class="error-pesan">
+          Peringatan: Mohon tulis lokasi antar (misal: Ruang Kelas / Meja) pada catatan karena Anda memilih opsi "Diantar"!
+        </div>
+      </div>
+    </section>
+
+  </div> <!-- Akhir .container -->
+
+
+  <!-- 5. BAR TOTAL (MENEMPEL DI BAWAH LAYAR) -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-inner">
+      <div class="bottom-total-info">
+        <span class="bottom-total-label">Total Pembayaran</span>
+        <span id="label-total-harga" class="bottom-total-price">Rp0</span>
+        <span id="label-sub-count" class="bottom-total-count">0 item dipilih</span>
+      </div>
+      <button id="btn-checkout" class="btn-checkout" disabled onclick="handleCheckout()">
+        Checkout
+      </button>
+    </div>
+  </div>
+
+
+  <!-- 6. MODAL RINGKASAN PESANAN (POPUP STRUK) -->
+  <div id="modal-ringkasan" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header-success">
+        <div class="modal-success-icon">&#10003;</div>
+        <h3>Pesanan Berhasil Disiapkan!</h3>
+        <p>Silakan tunjukkan ringkasan pesanan ini ke petugas kantin.</p>
+      </div>
+
+      <!-- Wadah struk ringkasan -->
+      <div class="struk-pesanan" id="konten-struk">
+        <!-- Diisi secara otomatis oleh JavaScript -->
+      </div>
+
+      <!-- Tombol penutup modal -->
+      <button class="btn-tutup-modal" onclick="tutupModalDanReset()">
+        Selesai
+      </button>
+    </div>
+  </div>
+
+  <!-- Menghubungkan file JavaScript terpisah -->
+  <script src="script.js"></script>
+</body>
+</html>
